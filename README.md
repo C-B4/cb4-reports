@@ -3,7 +3,7 @@ Used for CB4 response report export API
 
 ## Instalation:
 ### Alternative A
-<ins>Step 1</ins>: Clone the reposiotry from Github  
+<ins>Step 1</ins>: Clone the repository from Github  
 <ins>Step 2</ins>: Get credentials for the script  
 <ins>Step 3</ins>: Go to the folder where the Github repository was cloned  
 <ins>Step 4</ins>: Execute the script using your own credentials:  
