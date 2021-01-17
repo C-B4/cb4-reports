@@ -3,23 +3,23 @@ Used for CB4 response report export API
 
 ## Instalation:
 ### Alternative A
-Step 1: Clone the reposiotry from Github
-Step 2: Get credentials for the script
-Step 3: Go to the folder where the Github repository was cloned
-Step 4: Execute the script using your own credentials:
+<ins>Step 1</ins>: Clone the reposiotry from Github  
+<ins>Step 2</ins>: Get credentials for the script  
+<ins>Step 3</ins>: Go to the folder where the Github repository was cloned  
+<ins>Step 4</ins>: Execute the script using your own credentials:  
 ```
 python3 dump_results.py --username=your_username --password=your_password --host=cb4_host --clientId=valid_client_id --limitRows=300 --dir=/path/to/directory_to_dump_the_results
 ```
 
 ### Alternative B
-Step 1: Install the package from Github, using pip
-Example:
+<ins>Step 1</ins>: Install the package from Github, using pip  
+*Example*:
 ```
 pip3 install git+ssh://git@github.com/C-B4/response-report.git@feature-transform-package
 
 ```
-Step 2: Use the class in your scripts, as you wish
-Example:
+<ins>Step 2</ins>: Use the class in your scripts, as you wish  
+*Example*:
 ```
 import result_fetcher
 
