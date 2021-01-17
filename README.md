@@ -15,7 +15,8 @@ python3 dump_results.py --username=your_username --password=your_password --host
 Step 1: Install the package from Github, using pip
 Example:
 ```
-pip3 install git+https://github.com/
+pip3 install git+ssh://git@github.com/C-B4/response-report.git@feature-transform-package
+
 ```
 Step 2: Use the class in your scripts, as you wish
 Example:
