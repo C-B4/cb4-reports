@@ -5,10 +5,17 @@ Used for CB4 response report export API
 ### Setup python3 and pip
 ```
 sudo apt update
+sudo apt install software-properties-common
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt install python3.8
+python3 --version
+
 sudo apt install python3-pip
 
 pip3 --version
 ```
+If the python3 installation fails, try installing python from source:  
+https://phoenixnap.com/kb/how-to-install-python-3-ubuntu
 
 ### Alternative A
 <ins>Step 1</ins>: Clone the repository from Github  
