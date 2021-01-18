@@ -21,6 +21,7 @@ import urllib
 import urllib.error
 import urllib.request
 import uuid
+from getpass import getpass
 
 VERSION='1.0'
 
@@ -996,6 +997,7 @@ class ResultFetcher:
         else:
             die("Unknown state value requested: %s" % stateValue)
 
+
     def exportResponseReportCsv(self, accessToken, accessParams, logger, args):
         url = self.resolveExportResponseReportAccessUrl(accessParams)
         request = { }
@@ -1008,8 +1010,15 @@ class ResultFetcher:
 
         request["page"] = page
         request["orders"] = orders
-
-
+        request["filter"] = {
+            "from": int(args.get("start_date", (datetime.datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0) \
+                + datetime.timedelta(days=-30))).timestamp()*1000),
+            "key": "deployDate",
+            "to": int(args.get("end_date", datetime.datetime.combine(datetime.date.today(), datetime.time.max)).timestamp()*1000),
+            "type": "time"
+        }
+        request["reasonLang"] = args.get("language", "en-US")
+        
         reqData = json.dumps(request, indent=None, sort_keys=False)
         requestHeaders = {
             "Content-Type": "application/json",
@@ -1044,7 +1053,10 @@ class ResultFetcher:
 
         if not os.path.isabs(dirPath):
             dirPath = os.path.abspath(dirPath)
-        return os.path.join(dirPath, filePath)
+        
+        path = os.path.join(dirPath, filePath)
+        print("Writing report to: {}".format(path))
+        return path
 
     # expected structure is:
     # {
@@ -1115,9 +1127,34 @@ class ResultFetcher:
         if not self.isEmpty(configFile):
             logger.info("Using configuration file=%s" % configFile)
 
-        protocol = args.get("protocol", "https")
-        host = args.get("host", None)
-        port = args.get("port", -1)
+        if args.get("start_date"):
+            start_date = args.get("start_date")
+            try:
+                start_date_datetime = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+            except:
+                raise Exception("Invalid start_date. Format expected: yyyy-mm-dd")
+            args["start_date"] = start_date_datetime
+        if args.get("end_date"):
+            end_date = args.get("end_date")
+            try:
+                end_date_datetime = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+            except:
+                raise Exception("Invalid end_date. Format expected: yyyy-mm-dd")
+            args["end_date"] = end_date_datetime
+
+        site_basic_url = args.get("site_basic_url")
+        protocol = site_basic_url.split("://")[0] if "http" in site_basic_url.split("://")[0] \
+            else "https"
+
+        client_id = args.get("site_basic_url").split("-")[0]
+        args["clientId"] = args.get("site_basic_url").split("-")[0]
+        host = "-".join(args.get("site_basic_url").split("-")[1:])
+        domain = args.get("domain", "mcs.cb4.com")
+        host = domain if domain != "mcs.cb4.com" else host
+        try:
+            port = int(host.split(":")[-1])
+        except:
+            port = -1
 
         accessToken = args.get("accessToken", None)
         username = args.get("username", None)
@@ -1125,10 +1162,10 @@ class ResultFetcher:
             accessToken = str(accessToken)
         elif self.isEmpty(accessToken):
             accessParams = self.resolveEndpointAccessParameters(protocol, host, port, args)
+            password = getpass('Password: ')
             accessToken = self.resolveUserToken(
-                username, args.get("password", None), logger, accessParams)
+                username, password, logger, accessParams)
 
-        print("Access token: ", accessToken)
         outputParams = args.get("output", {})
         self.dumpResults(username, accessToken, accessParams, outputParams, logger, args)
 

@@ -3,10 +3,10 @@ import result_fetcher
 result_fetcher = result_fetcher.ResultFetcher()
 options = {
     "username": "noam@grr.la",
-    "password": "1",
-    "host": "qa2-staging-mcs.c-b4.com",
-    "clientId": "qa2",
+    "site_basic_url": "qa2-qa2-staging-mcs.c-b4.com",
     "limitRows": 300,
+    "start_date": '2020-01-01',
+    "end_date": '2022-07-01',
     "dir": "~/data/LSD/projects/response-report/"
 }
 
@@ -23,17 +23,18 @@ Available keys for the options dictionary:
     - clientId
     - clientIdFormat
     - mode
-    - host
-    - port
     - endpoint
     - limitRows
     - file
     - dir
     - accessToken
     - username
-    - password
     - output
     - configFile
+    - start_date
+    - end_date
+    - language
+    - site_basic_url
 """
 
 result_fetcher.run(options)
