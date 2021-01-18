@@ -14,7 +14,11 @@ pip3 --version
 <ins>Step 1</ins>: Clone the repository from Github  
 <ins>Step 2</ins>: Get credentials for the script  
 <ins>Step 3</ins>: Go to the folder where the Github repository was cloned  
-<ins>Step 4</ins>: Execute the script using your own credentials:  
+<ins>Step 4</ins>: Install python packages:  
+```
+pip3 install -r requirements.txt
+```
+<ins>Step 5</ins>: Execute the script using your own credentials:  
 ```
 python3 dump_results.py --username=your_username --site_base_url=yourClientId-cb4_host --limitRows=300 --dir=/path/to/directory_to_dump_the_results
 ```
@@ -24,9 +28,12 @@ python3 dump_results.py --username=your_username --site_base_url=yourClientId-cb
 *Example*:
 ```
 pip3 install git+ssh://git@github.com/C-B4/response-report.git@feature-transform-package
-
 ```
-<ins>Step 2</ins>: Use the class in your scripts, as you wish  
+<ins>Step 2</ins>: Install python packages:  
+```
+pip3 install -r requirements.txt
+```
+<ins>Step 3</ins>: Use the class in your scripts, as you wish  
 *Example*:
 ```
 import result_fetcher
