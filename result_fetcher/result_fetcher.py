@@ -1018,7 +1018,7 @@ class ResultFetcher:
             "type": "time"
         }
         request["reasonLang"] = args.get("language", "en-US")
-        
+
         reqData = json.dumps(request, indent=None, sort_keys=False)
         requestHeaders = {
             "Content-Type": "application/json",
@@ -1053,7 +1053,7 @@ class ResultFetcher:
 
         if not os.path.isabs(dirPath):
             dirPath = os.path.abspath(dirPath)
-        
+
         path = os.path.join(dirPath, filePath)
         print("Writing report to: {}".format(path))
         return path
@@ -1146,15 +1146,17 @@ class ResultFetcher:
         protocol = site_basic_url.split("://")[0] if "http" in site_basic_url.split("://")[0] \
             else "https"
 
-        client_id = args.get("site_basic_url").split("-")[0]
-        args["clientId"] = args.get("site_basic_url").split("-")[0]
-        host = "-".join(args.get("site_basic_url").split("-")[1:])
         domain = args.get("domain", "mcs.cb4.com")
+        host = site_basic_url.split("://")[1]
+        client_id = host.split("-")[0]
+        args["clientId"] = client_id
         host = domain if domain != "mcs.cb4.com" else host
         try:
             port = int(host.split(":")[-1])
         except:
             port = -1
+
+        self.resolveEndpointAccessParameters(protocol, host, port, args)
 
         accessToken = args.get("accessToken", None)
         username = args.get("username", None)
