@@ -17,6 +17,9 @@ pip3 --version
 If the python3 installation fails, try installing python from source:  
 https://phoenixnap.com/kb/how-to-install-python-3-ubuntu
 
+### (Optional) Using virtualenv
+`python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt`
+
 ### Alternative A
 <ins>Step 1</ins>: Clone the repository from Github  
 <ins>Step 2</ins>: Get credentials for the script  
