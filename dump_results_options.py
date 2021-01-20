@@ -1,13 +1,16 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import result_fetcher
 
 result_fetcher = result_fetcher.ResultFetcher()
 options = {
     "username": "noam@grr.la",
-    "site_basic_url": "qa2-qa2-staging-mcs.c-b4.com",
+    "site_basic_url": "https://qa2-staging-mcs.c-b4.com",
     "limitRows": 300,
     "start_date": '2020-01-01',
     "end_date": '2022-07-01',
-    "dir": "~/data/LSD/projects/response-report/"
+    "dir": "/tmp/"
 }
 
 """
