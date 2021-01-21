@@ -66,7 +66,7 @@ class ResultFetcher:
             args = argParser.parse_arguments()
         else:
             args = opt_args
-            arguments_parser.parse_site_url(args)
+            arguments_parser.process_args(args)
         self.main(args)
 
     def main(self, args):

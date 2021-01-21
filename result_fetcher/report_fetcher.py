@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import datetime
 import json
 import requests
 import urllib
@@ -50,13 +49,10 @@ class ReportFetcher:
         return request
 
     def prepare_request_dates(self, request):
-        start_date = self.parseStartDate()
-        end_date = self.parseEndDate()
-
         request["filter"] = {
-            "from": int(start_date.timestamp() * 1000),
+            "from": int(self.args.get("start_date").timestamp() * 1000),
             "key": "deployDate",
-            "to": int(end_date.timestamp() * 1000),
+            "to": int(self.args.get("end_date").timestamp() * 1000),
             "type": "time"
         }
         return request
@@ -76,26 +72,6 @@ class ReportFetcher:
     def prepare_report_url(self, site_basic_url):
         report_url = "%s/%s" % (site_basic_url, "v1/report/exporter/response/report")
         return report_url
-
-    def parseStartDate(self):
-        if not isEmpty(self.args.get("start_date")):
-            start_date = self.args.get("start_date")
-            try:
-                start_date_datetime = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-                return start_date_datetime
-            except:
-                raise Exception("Invalid start_date. Format expected: yyyy-mm-dd")
-        return datetime.datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0) + datetime.timedelta(days=-30)
-
-    def parseEndDate(self):
-        if not isEmpty(self.args.get("end_date")):
-            end_date = self.args.get("end_date")
-            try:
-                end_date_datetime = datetime.datetime.strptime(end_date, "%Y-%m-%d")
-                return end_date_datetime
-            except:
-                raise Exception("Invalid end_date. Format expected: yyyy-mm-dd")
-        return datetime.datetime.combine(datetime.date.today(), datetime.time.max)
 
     def downloadReport(self, url, verb, headersMap, reqData):
         if headersMap is None:
