@@ -2,7 +2,7 @@
 Export reports from CB4 application
 
 ## Installation
-Available Installation options described in this readme are installing the reports as a package and cloning the repository.
+Available installation options described in this readme are installing the reports as a package and cloning the repository.
 Follow option A to install as a package or option B to clone the repository
 ### Requirements
 - Python 3
@@ -60,7 +60,7 @@ result_fetcher.run(options)
 
 ### Option 2 - Clone Repository
 
-Clone the response-report repository from Github
+Clone cb4-reports repository from Github
 
 ```git clone https://github.com/C-B4/cb4-reports.git```
 
