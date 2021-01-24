@@ -83,6 +83,7 @@ class AccessTokenFetcher:
             die("Unknown Keycloak access token retrieval mode: %s" % mode)
 
         accessToken = rsp.get("access_token", None)
+        self.refresh_token = rsp.get("refresh_token", None)
         if isEmpty(accessToken):
             self.logger.error("No access token in Keycloak response: %s" % str(rsp))
             die("No access token returned from Keycloak")
@@ -283,6 +284,26 @@ class AccessTokenFetcher:
             return "%s://%s:%d/auth/realms/%s" % (protocol, host, port, realm)
         else:
             return "%s://%s/auth/realms/%s" % (protocol, host, realm)
+
+    def logout(self, accessToken):
+        url = self.resolveKeycloakOpenidAccessUrl() + "/logout"
+        clientId = self.args.get("clientId", None)
+        requestHeaders = {
+            "Authorization": "Bearer %s" % accessToken,
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
+
+        clientIdFormat = self.args.get("clientIdFormat", "ups-installation-%s")
+        effectiveClientId = clientIdFormat % clientId
+
+        payload = "&".join(
+            (
+                "client_id=%s" % effectiveClientId,
+                "refresh_token=%s" % self.refresh_token
+            )
+        )
+
+        self.executeHttpRequest(url, "POST", requestHeaders, payload, asJson=False)
 
     def extractKeycloakLoginActionValue(self, lines):
         for l in lines:

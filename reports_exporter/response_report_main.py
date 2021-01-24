@@ -78,6 +78,9 @@ class ResultFetcher:
             die("Could not get access token for the username")
         exporter = ReportFetcher(logger, args)
         logger.info("Started exporting report, this may take a few minutes")
-        exporter.export_response_report(token)
+        try:
+            exporter.export_response_report(token)
+        finally:
+            token_fetcher.logout(token)
 
         sys.exit(0)
