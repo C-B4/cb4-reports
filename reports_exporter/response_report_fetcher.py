@@ -7,6 +7,7 @@ import urllib
 import urllib.error
 import urllib.request
 import os
+import datetime
 from tempfile import gettempdir
 
 
@@ -86,7 +87,7 @@ class ReportFetcher:
             # InsecureRequestWarning: Unverified HTTPS request is being made.
             requests.packages.urllib3.disable_warnings()
 
-            self.logger.info("%s %s" % (verb, url))
+            self.logger.debug("%s %s" % (verb, url))
             connTimeout = self.args.get("connectTimeout", 15)
             rspTimeout = self.args.get("responseTimeout", 3000)
             rsp = requests.request(verb, url, headers=headersMap,
@@ -113,7 +114,7 @@ class ReportFetcher:
         if not isEmpty(filePath):
             filePath = self.resolvePathVariables(filePath)
             if os.path.isabs(filePath):
-                print("Writing report to: {}".format(filePath))
+                print("report exported: {}".format(filePath))
                 return filePath
 
         dirPath = self.args.get("dir", None)
@@ -124,17 +125,15 @@ class ReportFetcher:
 
 
         if isEmpty(filePath):
-            username = self.args.get("username", None)
-            pos = username.find('@')    # Strip e-mail domain
-            if pos > 0:
-                username = username[0:pos]
-            filePath = "%s-dashboard-responses.csv" % username
+            today = datetime.datetime.utcnow()
+            filePath = "response_report_%s.csv" % today.strftime("%Y%m%d_%H%M")
+
 
         if not os.path.isabs(dirPath):
             dirPath = os.path.abspath(dirPath)
 
         path = os.path.join(dirPath, filePath)
-        print("Writing report to: {}".format(path))
+        print("Report exported to: {}".format(path))
         return path
 
     def resolvePathVariables(self, path):

@@ -6,10 +6,10 @@ import sys
 import signal
 import os
 
-from result_fetcher.report_fetcher import ReportFetcher
-from result_fetcher import arguments_parser
-from result_fetcher import access_token_fetcher
-from result_fetcher.custom_logging import LogFactory
+from reports_exporter.response_report_fetcher import ReportFetcher
+from reports_exporter import arguments_parser
+from reports_exporter import access_token_fetcher
+from reports_exporter.custom_logging import LogFactory
 
 
 def isEmpty(s):
@@ -77,6 +77,7 @@ class ResultFetcher:
         if isEmpty(token):
             die("Could not get access token for the username")
         exporter = ReportFetcher(logger, args)
+        logger.info("Started exporting report, this may take a few minutes")
         exporter.export_response_report(token)
 
         sys.exit(0)

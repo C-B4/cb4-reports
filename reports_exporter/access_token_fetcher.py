@@ -51,7 +51,7 @@ class AccessTokenFetcher:
         return self.resolve_user_token(self.args["username"], password)
 
     def resolve_user_token(self, username, password):
-        self.logger.info("Retrieving Keycloak access token")
+        self.logger.debug("Retrieving Keycloak access token")
 
         if isinstance(username, (int, float)):
             username = str(username)
@@ -87,7 +87,7 @@ class AccessTokenFetcher:
             self.logger.error("No access token in Keycloak response: %s" % str(rsp))
             die("No access token returned from Keycloak")
 
-        self.logger.info("Retrieved Keycloak access token")
+        self.logger.debug("Retrieved Keycloak access token")
         return accessToken
 
     def resolveStandardUserToken(self, username, password, clientId):
@@ -185,7 +185,7 @@ class AccessTokenFetcher:
             # InsecureRequestWarning: Unverified HTTPS request is being made.
             requests.packages.urllib3.disable_warnings()
 
-            self.logger.info("%s %s" % (verb, url))
+            self.logger.debug("%s %s" % (verb, url))
             connTimeout = self.args.get("connectTimeout", 15)
             rspTimeout = self.args.get("responseTimeout", 30)
             rsp = requests.request(verb, url, headers=headersMap,
@@ -198,8 +198,7 @@ class AccessTokenFetcher:
             # NOTE: we extract the response context regardless of the status code
             # so we can place a debug breakpoint here and see it
             if (statusCode < 200) or (statusCode >= 400):
-                raise urllib.error.HTTPError(url, statusCode, "Failed: %d" % statusCode, rsp.headers, None)
-
+                raise urllib.error.HTTPError(url, statusCode, "Reason: %s. URL: %s" % (rsp.reason, url), rsp.headers, None)
             result = {
                 "statusCode": statusCode,
                 "headers": rsp.headers,
@@ -242,7 +241,10 @@ class AccessTokenFetcher:
         rsp = self.executeHttpRequest(url, "POST", requestHeaders, formData, cookieJar=cookies, asJson=False)
         redirectHistory = rsp.get("history", None)
         if isEmpty(redirectHistory):
-            die("No Keycloak redirection history available after successful authentication")
+            if "INVALID_USER_PASS" in rsp.get("body", None):
+                die("Invalid Username or Password")
+            else:
+                die("No Keycloak redirection available")
 
         rdData = redirectHistory[0]
         rdHeaders = rdData.headers

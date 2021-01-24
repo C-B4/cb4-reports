@@ -1,8 +1,9 @@
 import argparse
 import datetime
 
-DEFAULT_WEEKS_COUNT = 4
 
+DEFAULT_WEEKS_COUNT = 4
+DEFAULT_LOG_THRESHOLD = "INFO"
 DEFAULT_FIRST_DAY_OF_WEEK = "MON"
 
 SHIFT_DAYS = {
@@ -59,8 +60,8 @@ def parse_site_url(args):
 def manage_start_and_end_dates(args):
     req_start_date = args.get("start_date")
     req_end_date = args.get("end_date")
-    day_of_week = args.get("first_day_of_week")
-    weeks_count = args.get("weeks_count")
+    day_of_week = args.get("first_day_of_week", DEFAULT_FIRST_DAY_OF_WEEK)
+    weeks_count = args.get("weeks_count", DEFAULT_WEEKS_COUNT)
     if isEmpty(req_end_date) and isEmpty(req_start_date):
         today = datetime.datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
         end_date = shift_date_to_end_day_of_week(today, day_of_week)
@@ -88,6 +89,7 @@ def manage_start_and_end_dates(args):
 def process_args(args):
     parse_site_url(args)
     manage_start_and_end_dates(args)
+    args["log-threshold"] = args.get("log-threshold", DEFAULT_LOG_THRESHOLD)
 
 
 class ArgumentParser:
@@ -150,6 +152,12 @@ If  only START_DATE -> timespan = (start_date, start_date + weeks_count).
 If  only only END_DATE ->  timespan = (end_date - weeks_count, end_date).
 If both START_DATE & END_DATE are set - WEEKS_COUNT is ignored. 
 """
+                            )
+        parser.add_argument('--log-threshold',
+                            type=str,
+                            dest='log-threshold',
+                            default=DEFAULT_LOG_THRESHOLD,
+                            help="OFF, ERROR, WARNING, INFO, DEBUG, TRACE, ALL"
                             )
 
         args = parser.parse_args()
