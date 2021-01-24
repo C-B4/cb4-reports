@@ -1,7 +1,7 @@
 import argparse
 import datetime
 
-DEFAULT_FIRST_DAY_OF_WEEK = "MON"
+DEFAULT_WEEKS_COUNT = 4
 
 DEFAULT_FIRST_DAY_OF_WEEK = "MON"
 
@@ -58,20 +58,31 @@ def parse_site_url(args):
 
 def manage_start_and_end_dates(args):
     req_start_date = args.get("start_date")
-    day_of_week = args.get("first_day_of_week")
-    if not isEmpty(req_start_date):
-        args["start_date"] = shift_date_to_first_day_of_week(parse_date(req_start_date), day_of_week)
-    else:
-        today = datetime.datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
-        first_day_of_week = shift_date_to_first_day_of_week(today, day_of_week)
-        args["start_date"] = first_day_of_week - datetime.timedelta(weeks=4)
-
     req_end_date = args.get("end_date")
-    if not isEmpty(req_end_date):
-        args["end_date"] = shift_date_to_end_day_of_week(parse_date(req_end_date), day_of_week)
-    else:
+    day_of_week = args.get("first_day_of_week")
+    weeks_count = args.get("weeks_count")
+    if isEmpty(req_end_date) and isEmpty(req_start_date):
         today = datetime.datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
-        args["end_date"] = shift_date_to_end_day_of_week(today, day_of_week)
+        end_date = shift_date_to_end_day_of_week(today, day_of_week)
+        args["end_date"] = end_date
+        args["start_date"] = shift_date_to_first_day_of_week(end_date - datetime.timedelta(weeks=weeks_count), day_of_week)
+        return
+
+    if not isEmpty(req_end_date) and not isEmpty(req_start_date):
+        args["start_date"] = shift_date_to_first_day_of_week(parse_date(req_start_date), day_of_week)
+        args["end_date"] = shift_date_to_end_day_of_week(parse_date(req_end_date), day_of_week)
+        return
+
+    if not isEmpty(req_start_date):
+        start_date = shift_date_to_first_day_of_week(parse_date(req_start_date), day_of_week)
+        args["start_date"] = start_date
+        args["end_date"] = shift_date_to_end_day_of_week(start_date + datetime.timedelta(weeks=weeks_count), day_of_week)
+        return
+
+    if not isEmpty(req_end_date):
+        end_date = shift_date_to_end_day_of_week(parse_date(req_end_date), day_of_week)
+        args["end_date"] = end_date
+        args["start_date"] = shift_date_to_first_day_of_week(end_date - datetime.timedelta(weeks=weeks_count), day_of_week)
 
 
 def process_args(args):
@@ -82,7 +93,7 @@ def process_args(args):
 class ArgumentParser:
 
     def parse_arguments(self):
-        parser = argparse.ArgumentParser(description='Dumps the responses to a CSV file')
+        parser = argparse.ArgumentParser(description='Dumps the responses to a CSV file', formatter_class=argparse.RawTextHelpFormatter)
         parser.add_argument('--username',
                             type=str,
                             dest='username',
@@ -129,6 +140,16 @@ class ArgumentParser:
                             dest='first_day_of_week',
                             default=DEFAULT_FIRST_DAY_OF_WEEK,
                             help='options: [SUN MON TUE WED THU FRI SAT] , default: MON'
+                            )
+        parser.add_argument('--weeks_count',
+                            type=int,
+                            dest='weeks_count',
+                            default=DEFAULT_WEEKS_COUNT,
+                            help="""If START_DATE & END_DATE are not set -> timespan = (today - weeks_count, today).
+If  only START_DATE -> timespan = (start_date, start_date + weeks_count).
+If  only only END_DATE ->  timespan = (end_date - weeks_count, end_date).
+If both START_DATE & END_DATE are set - WEEKS_COUNT is ignored. 
+"""
                             )
 
         args = parser.parse_args()
