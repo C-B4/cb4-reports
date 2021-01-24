@@ -1,8 +1,8 @@
 from setuptools import setup
 
-setup(name='result_fetcher',
+setup(name='reports_exporter',
       version='0.1',
-      description='Result fetcher from CB4',
+      description='export reports from CB4',
       author='CB4',
-      packages=['result_fetcher'],
+      packages=['reports_exporter'],
       zip_safe=False)
