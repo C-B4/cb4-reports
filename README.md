@@ -1,57 +1,32 @@
-# response-report
-Used for CB4 response report export API
+# CB4 Reports
+Export reports from CB4 application
 
-## Instalation:
-### Setup python3 and pip
-```
-sudo apt update
-sudo apt install software-properties-common
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt install python3.8
-python3 --version
+## Installation
+Available Installation options described in this readme are installing the reports as a package and cloning the repository.
+Follow option A to install as a package or option B to clone the repository
+### Requirements
+- Python 3
+- CB4 application credentials
 
-sudo apt install python3-pip
+### Option A - Use as Package
+Install the package from Github, using pip
+```bash
+python3 -m pip install git+ssh://git@github.com/C-B4/cb4-reports.git@main
+```
+Install required python packages
+```bash
+python3 -m pip install -r requirements.txt
+```
+import and use the class in your scripts in your code
 
-pip3 --version
-```
-If the python3 installation fails, try installing python from source:  
-https://phoenixnap.com/kb/how-to-install-python-3-ubuntu
-
-### (Optional) Using virtualenv
-`python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt`
-
-### Alternative A
-<ins>Step 1</ins>: Clone the repository from Github  
-<ins>Step 2</ins>: Get credentials for the script  
-<ins>Step 3</ins>: Go to the folder where the Github repository was cloned  
-<ins>Step 4</ins>: Install python packages:  
-```
-pip3 install -r requirements.txt
-```
-<ins>Step 5</ins>: Execute the script using your own credentials:  
-```
-python3 dump_results.py --username=your_username --site_base_url=yourClientId-cb4_host --limitRows=300 --dir=/path/to/directory_to_dump_the_results
-```
-
-### Alternative B
-<ins>Step 1</ins>: Install the package from Github, using pip  
-*Example*:
-```
-pip3 install git+ssh://git@github.com/C-B4/response-report.git@feature-transform-package
-```
-<ins>Step 2</ins>: Install python packages:  
-```
-pip3 install -r requirements.txt
-```
-<ins>Step 3</ins>: Use the class in your scripts, as you wish  
-*Example*:
-```
+Example:
+```python
 import result_fetcher
 
 result_fetcher = result_fetcher.ResultFetcher()
 options = {
-    "username": "your_username",
-    "site_basic_url": "yourClientId-cb4_host",
+    "username": "username",
+    "site_basic_url": "https://sitename.c-b4.com",
     "limitRows": 300,
     "start_date": '2020-01-01',
     "end_date": '2022-07-01',
@@ -86,4 +61,25 @@ Available keys for the options dictionary:
 """
 result_fetcher.run(options)
 
+```
+
+### Option 2 - Clone Repository
+
+Clone the response-report repository from Github
+
+```git clone https://github.com/C-B4/cb4-reports.git```
+
+Install required packages from the cloned directory
+```
+python3 -m pip install -r requirements.txt
+```
+
+Execute Script with --help for detailed execution instructions
+```
+python3 dump_results.py --help
+```
+
+Script execution example
+```
+python3 dump_results.py --username=user@cb4.com --site_basic_url=https://sitename.c-b4.com --dir=<Export Path> --limitRows=<Max Rows>
 ```
