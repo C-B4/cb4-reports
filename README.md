@@ -1,5 +1,5 @@
 # cb4-reports
-Export reports from CB4 application
+Export reports from CB4
 
 ## Installation
 Available installation options described in this readme are installing the reports as a package and cloning the repository.
