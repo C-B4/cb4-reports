@@ -59,16 +59,19 @@ class ReportFetcher:
         return request
 
     def prepare_request_page_and_order(self):
-        page = {
-            "from": 0,
-            "size": self.args.get("limitRows", 99999999)
-        }
         orders = [{"direction": "ASC", "fieldName": "storeName"}, {"direction": "ASC", "fieldName": "productName"}]
-        request = {
-            "page": page,
+        if not self.args.get("limitRows") is None:
+            return {
+                "orders": orders,
+                "page": {
+                    "from": 0,
+                    "size": self.args.get("limitRows")
+                }
+            }
+
+        return {
             "orders": orders
         }
-        return request
 
     def prepare_report_url(self, site_basic_url):
         report_url = "%s/%s" % (site_basic_url, "v1/report/exporter/response/report")
