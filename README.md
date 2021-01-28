@@ -1,5 +1,5 @@
 # cb4-reports
-Export reports from CB4
+Export reports from CB4 application
 
 ## Installation
 Available installation options described in this readme are installing the reports as a package and cloning the repository.
@@ -11,7 +11,7 @@ Follow option A to install as a package or option B to clone the repository
 ### Option A - Use as Package
 Install the package from Github, using pip
 ```bash
-python3 -m pip install git+https://github.com/C-B4/cb4-reports.git
+python3 -m pip install cb4-reports-exporter
 ```
 Install required python packages
 ```bash
@@ -76,5 +76,5 @@ python3 response_report_exporter.py --help
 
 Script execution example
 ```
-python3 response_report_exporter.py --username=user@cb4.com --site_basic_url=https://sitename.c-b4.com --dir=<Export Path> --limitRows=<Max Rows>
+python3 response_report_exporter.py --username=<cb4 user name> --site_basic_url=https://sitename.c-b4.com --dir=<Export Path> --end_date=2020-01-01 --limitRows=<Max Rows>
 ```
