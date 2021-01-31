@@ -1,10 +1,12 @@
 import argparse
 import datetime
+import sys
 
 
 DEFAULT_WEEKS_COUNT = 4
 DEFAULT_LOG_THRESHOLD = "INFO"
 DEFAULT_FIRST_DAY_OF_WEEK = "MON"
+DEFAULT_DOMAIN="mcs.c-b4.com"
 
 SHIFT_DAYS = {
     "SUN": 1,
@@ -15,6 +17,19 @@ SHIFT_DAYS = {
     "FRI": -4,
     "SAT": -5,
 }
+
+
+def die(msg=None,rc=1):
+    """
+    Cleanly exits the program with an error message
+    """
+
+    if msg:
+        sys.stderr.write(msg)
+        sys.stderr.write("\n")
+        sys.stderr.flush()
+
+    sys.exit(rc)
 
 
 def shift_date_to_first_day_of_week(date, day_of_week):
@@ -51,11 +66,12 @@ def parse_site_url(args):
     args["host"] = base_url.split(":")[0]
     if len(base_url.split(":")) > 1:
         args["port"] = base_url.split(":")[1]
+    domain = args.get("domain")
 
-    sub_domain = base_url.split(".")[0]
-    client_id = sub_domain.split("-")[0]
+    if domain not in base_url:
+        die("domain %s is missing from site_basic_url %s" % (domain, url))
+    client_id = base_url.split("-%s" % domain)[0]
     args["clientId"] = client_id
-
 
 def manage_start_and_end_dates(args):
     req_start_date = args.get("start_date")
@@ -158,6 +174,12 @@ If both START_DATE & END_DATE are set - WEEKS_COUNT is ignored.
                             dest='log-threshold',
                             default=DEFAULT_LOG_THRESHOLD,
                             help="OFF, ERROR, WARNING, INFO, DEBUG, TRACE, ALL"
+                            )
+        parser.add_argument('--domain',
+                            type=str,
+                            dest='domain',
+                            default=DEFAULT_DOMAIN,
+                            help="domain name. default value %s" % DEFAULT_DOMAIN
                             )
 
         args = parser.parse_args()
