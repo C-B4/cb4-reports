@@ -103,6 +103,7 @@ def manage_start_and_end_dates(args):
 
 
 def process_args(args):
+    args["domain"] = args.get("domain", DEFAULT_DOMAIN)
     parse_site_url(args)
     manage_start_and_end_dates(args)
     args["log-threshold"] = args.get("log-threshold", DEFAULT_LOG_THRESHOLD)
