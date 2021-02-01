@@ -82,5 +82,3 @@ class ResultFetcher:
             exporter.export_response_report(token)
         finally:
             token_fetcher.logout(token)
-
-        sys.exit(0)
