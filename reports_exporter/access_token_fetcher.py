@@ -1,10 +1,11 @@
-from getpass import getpass
 import sys
 import urllib
 import urllib.error
 import urllib.request
 import uuid
 import requests
+from getpass import getpass
+
 
 
 def die(msg=None,rc=1):
@@ -47,7 +48,9 @@ class AccessTokenFetcher:
         self.args = args
 
     def get_access_token(self) -> str:
-        password = getpass('Password: ')
+        password = self.args.get("password")
+        if isEmpty(password):
+            password = getpass('Password: ')
         return self.resolve_user_token(self.args["username"], password)
 
     def resolve_user_token(self, username, password):

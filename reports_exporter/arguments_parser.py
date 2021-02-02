@@ -103,6 +103,7 @@ def manage_start_and_end_dates(args):
 
 
 def process_args(args):
+    password = args.get("password")
     args["domain"] = args.get("domain", DEFAULT_DOMAIN)
     parse_site_url(args)
     manage_start_and_end_dates(args)
@@ -117,6 +118,10 @@ class ArgumentParser:
                             type=str,
                             dest='username',
                             help='login username'
+                            )
+        parser.add_argument('--password',
+                            type=str,
+                            dest='password'
                             )
         parser.add_argument('--dir',
                             type=str,

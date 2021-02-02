@@ -27,6 +27,7 @@ from reports_exporter import response_report_main
 result_fetcher = response_report_main.ResultFetcher()
 options = {
     "username": "username",
+    "password": "password",
     "site_basic_url": "https://sitename.c-b4.com",
     "limitRows": 300,
     "start_date": '2020-01-01',
@@ -41,6 +42,7 @@ Available keys for the options dictionary:
     - dir
     - file
     - username
+    - password
     - start_date
     - end_date
     - language
@@ -76,5 +78,5 @@ python3 response_report_exporter.py --help
 
 Script execution example
 ```
-python3 response_report_exporter.py --username=<cb4 user name> --site_basic_url=https://sitename.c-b4.com --dir=<Export Path> --end_date=2020-01-01 --limitRows=<Max Rows>
+python3 response_report_exporter.py --username=<cb4 user name> --password=<cb4 user password> --site_basic_url=https://sitename.c-b4.com --dir=<Export Path> --end_date=2020-01-01 --limitRows=<Max Rows>
 ```
