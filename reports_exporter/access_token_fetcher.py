@@ -1,4 +1,3 @@
-from getpass import getpass
 import sys
 import urllib
 import urllib.error
@@ -47,7 +46,7 @@ class AccessTokenFetcher:
         self.args = args
 
     def get_access_token(self) -> str:
-        password = getpass('Password: ')
+        password = self.args.get("password")
         return self.resolve_user_token(self.args["username"], password)
 
     def resolve_user_token(self, username, password):
