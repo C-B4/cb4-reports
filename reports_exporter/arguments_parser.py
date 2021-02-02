@@ -104,8 +104,6 @@ def manage_start_and_end_dates(args):
 
 def process_args(args):
     password = args.get("password")
-    if isEmpty(password):
-        die("Missing password")
     args["domain"] = args.get("domain", DEFAULT_DOMAIN)
     parse_site_url(args)
     manage_start_and_end_dates(args)
