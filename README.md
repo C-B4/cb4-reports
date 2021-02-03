@@ -22,9 +22,9 @@ import and use the class in your scripts in your code
 Example:
 
 ```python
-from reports_exporter import response_report_main
+from reports_exporter import report_main
 
-result_fetcher = response_report_main.ResultFetcher()
+result_fetcher = report_main.ResultFetcher()
 options = {
     "username": "username",
     "password": "password",

@@ -6,7 +6,9 @@ import sys
 import signal
 import os
 
-from reports_exporter.response_report_fetcher import ReportFetcher
+from reports_exporter.report_type import ReportType
+from reports_exporter.response_report_fetcher import ReportFetcher as ResponseReportFetcher
+from reports_exporter.earnings_report_fetcher import ReportFetcher as EarningsReportFetcher
 from reports_exporter import arguments_parser
 from reports_exporter import access_token_fetcher
 from reports_exporter.custom_logging import LogFactory
@@ -33,6 +35,11 @@ def die(msg=None,rc=1):
 
 
 class ResultFetcher:
+
+    def __init__(self, report_type=ReportType.RESPONSE) -> None:
+        super().__init__()
+        self.report_type = report_type
+
     def die(self, msg=None, rc=1):
         """
         Cleanly exits the program with an error message
@@ -62,23 +69,32 @@ class ResultFetcher:
             sys.stderr.write("Use Ctrl+C to stop the script\n")
 
         if opt_args is None:
-            argParser = arguments_parser.ArgumentParser()
-            args = argParser.parse_arguments()
+            args = arguments_parser.ArgumentParser(self.report_type).parse_arguments()
         else:
             args = opt_args
-            arguments_parser.process_args(args)
-        self.main(args)
+            arguments_parser.process_args(args, self.report_type)
 
-    def main(self, args):
         logFactory = LogFactory(args)
         logger = logFactory.getLogger("main")
         token_fetcher = access_token_fetcher.AccessTokenFetcher(logger, args)
         token = token_fetcher.get_access_token()
         if isEmpty(token):
             die("Could not get access token for the username")
-        exporter = ReportFetcher(logger, args)
-        logger.info("Started exporting report, this may take a few minutes")
+
         try:
-            exporter.export_response_report(token)
+            if self.report_type == ReportType.RESPONSE:
+                self.response_report(args, logger, token)
+            else:
+                self.earnings_report(args, logger, token)
         finally:
             token_fetcher.logout(token)
+
+    def response_report(self, args, logger, token):
+        exporter = ResponseReportFetcher(logger, args)
+        logger.info("Started exporting report, this may take a few minutes")
+        exporter.export_response_report(token)
+
+    def earnings_report(self, args, logger, token):
+        exporter = EarningsReportFetcher(logger, args)
+        logger.info("Started exporting report, this may take a few minutes")
+        exporter.export_response_report(token)
