@@ -1,9 +1,9 @@
 import argparse
 import datetime
 from calendar import monthrange
-import sys
 
 from reports_exporter.report_type import ReportType
+from reports_exporter.utils import die, isEmpty
 
 DEFAULT_WEEKS_COUNT = 4
 DEFAULT_LOG_THRESHOLD = "INFO"
@@ -19,19 +19,6 @@ SHIFT_DAYS = {
     "FRI": -4,
     "SAT": -5,
 }
-
-
-def die(msg=None,rc=1):
-    """
-    Cleanly exits the program with an error message
-    """
-
-    if msg:
-        sys.stderr.write(msg)
-        sys.stderr.write("\n")
-        sys.stderr.flush()
-
-    sys.exit(rc)
 
 
 def shift_date_to_first_day_of_week(date, day_of_week):
@@ -50,13 +37,6 @@ def shift_date_to_end_day_of_week(date, day_of_week):
 
 def shift_date_to_end_day_of_month(date: datetime):
     return date.replace(day=monthrange(date.year, date.month)[1])
-
-
-def isEmpty(s):
-    if (s is None) or (len(s) <= 0):
-        return True
-    else:
-        return False
 
 
 def parse_date(date_str, format="%Y-%m-%d"):

@@ -2,36 +2,17 @@
 # -*- coding: utf-8 -*-
 
 
-import sys
-import signal
 import os
+import signal
+import sys
 
+from reports_exporter import access_token_fetcher
+from reports_exporter import arguments_parser
+from reports_exporter.custom_logging import LogFactory
+from reports_exporter.earnings_report_fetcher import ReportFetcher as EarningsReportFetcher
 from reports_exporter.report_type import ReportType
 from reports_exporter.response_report_fetcher import ReportFetcher as ResponseReportFetcher
-from reports_exporter.earnings_report_fetcher import ReportFetcher as EarningsReportFetcher
-from reports_exporter import arguments_parser
-from reports_exporter import access_token_fetcher
-from reports_exporter.custom_logging import LogFactory
-
-
-def isEmpty(s):
-    if (s is None) or (len(s) <= 0):
-        return True
-    else:
-        return False
-
-
-def die(msg=None,rc=1):
-        """
-        Cleanly exits the program with an error message
-        """
-
-        if msg:
-            sys.stderr.write(msg)
-            sys.stderr.write("\n")
-            sys.stderr.flush()
-
-        sys.exit(rc)
+from reports_exporter.utils import isEmpty, die
 
 
 class ResultFetcher:
@@ -40,27 +21,15 @@ class ResultFetcher:
         super().__init__()
         self.report_type = report_type
 
-    def die(self, msg=None, rc=1):
-        """
-        Cleanly exits the program with an error message
-        """
-
-        if msg:
-            sys.stderr.write(msg)
-            sys.stderr.write("\n")
-            sys.stderr.flush()
-
-        sys.exit(rc)
-
     def signal_handler(self):
-        self.die('Exit due to Control+C')
+        die('Exit due to Control+C')
 
     def run(self, opt_args=None):
         pyVersion = sys.version_info
         if pyVersion.major != 3:
-            self.die("Major Python version must be 3.x: %s" % str(pyVersion))
+            die("Major Python version must be 3.x: %s" % str(pyVersion))
         if pyVersion.minor < 0:
-            self.die("Minor Python version %s should be at least 3.0+" % str(pyVersion))
+            die("Minor Python version %s should be at least 3.0+" % str(pyVersion))
 
         signal.signal(signal.SIGINT, self.signal_handler)
         if os.name == 'nt':
@@ -92,9 +61,9 @@ class ResultFetcher:
     def response_report(self, args, logger, token):
         exporter = ResponseReportFetcher(logger, args)
         logger.info("Started exporting report, this may take a few minutes")
-        exporter.export_response_report(token)
+        exporter.export_report(token)
 
     def earnings_report(self, args, logger, token):
         exporter = EarningsReportFetcher(logger, args)
         logger.info("Started exporting report, this may take a few minutes")
-        exporter.export_response_report(token)
+        exporter.export_report(token)
