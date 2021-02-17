@@ -1,5 +1,5 @@
 # cb4-reports
-Export reports from CB4 application
+Export reports from CB4 application.
 Available Reports: 
 - Response Report
 - Earnings Report
@@ -127,5 +127,4 @@ Script execution example
 ```
 python3 response_report_exporter.py --username=<cb4 user name> --password=<cb4 user password> --site_basic_url=https://sitename.c-b4.com --dir=<Export Path> --end_date=2020-01-01 --limitRows=<Max Rows>
 python3 earnings_report_exporter.py --username=<cb4 user name> --password=<cb4 user password> --site_basic_url=https://sitename.c-b4.com --dir=<Export Path> --end_date=2020-01-01 --limitRows=<Max Rows>
-
 ```
