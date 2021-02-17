@@ -29,7 +29,7 @@ class ReportFetcherBase:
             # InsecureRequestWarning: Unverified HTTPS request is being made.
             requests.packages.urllib3.disable_warnings()
 
-            self.logger.debug("%s %s" % (verb, url))
+            self.logger.debug("url: %s, header:%s, data: %s" % (url, headersMap, dataBytes))
             connTimeout = self.args.get("connectTimeout", 15)
             rspTimeout = self.args.get("responseTimeout", 3000)
             rsp = requests.request(verb, url, headers=headersMap,
