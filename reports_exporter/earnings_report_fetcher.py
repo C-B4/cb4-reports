@@ -51,7 +51,11 @@ class ReportFetcher(ReportFetcherBase):
         return request
 
     def prepare_request_page_and_order(self):
-        orders = [{"direction": "ASC", "fieldName": "task.storeName"}, {"direction": "ASC", "fieldName": "task.productName"}]
+        orders = [
+            {"direction": "ASC", "fieldName": "task.deployDate"},
+            {"direction": "ASC", "fieldName": "task.storeName"},
+            {"direction": "ASC", "fieldName": "task.productName"}
+        ]
         if not self.args.get("limitRows") is None:
             return {
                 "orders": orders,
