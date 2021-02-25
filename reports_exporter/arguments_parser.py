@@ -39,11 +39,11 @@ def shift_date_to_end_day_of_month(date: datetime):
     return date.replace(day=monthrange(date.year, date.month)[1])
 
 
-def parse_date(date_str, format="%Y-%m-%d"):
+def parse_date(date_str, format="%Y-%m-%d", format_hint="yyyy-mm-dd"):
     try:
         return datetime.datetime.strptime(date_str, format)
     except:
-        raise Exception("Invalid start_date. Format expected: yyyy-mm-dd")
+        raise Exception("Invalid start_date: " + date_str + ". Format expected: " + format_hint)
 
 
 def parse_site_url(args):
@@ -76,21 +76,21 @@ def manage_earnings_report_start_and_end_dates(args):
         args["start_date"] = shift_date_to_first_day_of_week(start_date, day_of_week)
 
     req_end_date = args.get("end_date")
-    if not isEmpty(req_start_date):
+    if not isEmpty(req_end_date):
         args["end_date"] = shift_date_to_end_day_of_week(parse_date(req_end_date), day_of_week)
     else:
         args["end_date"] = shift_date_to_end_day_of_week(today, day_of_week)
 
     attribute_start_month = args.get("attribute_start_month")
     if not isEmpty(attribute_start_month):
-        args["attribute_start_month"] = shift_date_to_first_day_of_month(parse_date(attribute_start_month, "%b-%Y"))
+        args["attribute_start_month"] = shift_date_to_first_day_of_month(parse_date(attribute_start_month, "%b-%Y", "MMM-yyyy"))
     else:
         start_date = today - datetime.timedelta(weeks=5*12*4)
         args["attribute_start_month"] = shift_date_to_first_day_of_month(start_date)
 
     attribute_end_month = args.get("attribute_end_month")
     if not isEmpty(attribute_end_month):
-        args["attribute_end_month"] = shift_date_to_end_day_of_month(parse_date(attribute_end_month, "%b-%Y"))
+        args["attribute_end_month"] = shift_date_to_end_day_of_month(parse_date(attribute_end_month, "%b-%Y", "MMM-yyyy"))
     else:
         args["attribute_end_month"] = shift_date_to_end_day_of_month(today)
 
