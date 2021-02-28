@@ -1,6 +1,8 @@
 from reports_exporter import report_main
 from reports_exporter.report_type import ReportType
 
+# This file is for maintaining backwards compatibility from version 1.0.4 to version 2.0.1
+# Please try to avoid it
 
 class ResultFetcher:
 
