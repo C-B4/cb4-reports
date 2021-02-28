@@ -3,18 +3,7 @@ import datetime
 import threading
 import traceback
 
-
-def die(msg=None,rc=1):
-        """
-        Cleanly exits the program with an error message
-        """
-
-        if msg:
-            sys.stderr.write(msg)
-            sys.stderr.write("\n")
-            sys.stderr.flush()
-
-        sys.exit(rc)
+from reports_exporter.utils import die
 
 
 class LogLevel(object):
@@ -39,7 +28,7 @@ class LogLevel(object):
         raise NotImplementedError("Log level value is immutable")
 
     def __str__(self):
-        return "%s[%s]" % (self.name % str(self.value))
+        return "%s[%s]" % (self.name, str(self.value))
 
 
 class Logger(object):

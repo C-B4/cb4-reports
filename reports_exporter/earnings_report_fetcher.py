@@ -8,7 +8,7 @@ from reports_exporter.report_fetcher_base import ReportFetcherBase
 
 class ReportFetcher(ReportFetcherBase):
     def __init__(self, logger, args) -> None:
-        super().__init__(logger, args, "response_report")
+        super().__init__(logger, args, "earnings_report")
 
     def export_report(self, access_token):
         report_url, reqData, requestHeaders = self.prepare_request(access_token)
@@ -20,7 +20,6 @@ class ReportFetcher(ReportFetcherBase):
 
         request = self.prepare_request_page_and_order()
         request = self.prepare_request_dates(request)
-        request = self.prepare_request_language(request)
 
         reqData = json.dumps(request, indent=None, sort_keys=False)
 
@@ -31,24 +30,31 @@ class ReportFetcher(ReportFetcherBase):
         }
         return report_url, reqData, requestHeaders
 
-    def prepare_request_language(self, request):
-        request["reasonLang"] = self.args.get("language", "en-US")
-        return request
-
     def prepare_request_dates(self, request):
         request["filter"] = {
-            "from": int(self.args.get("start_date").timestamp() * 1000),
-            "key": "deployDate",
-            "to": int(self.args.get("end_date").timestamp() * 1000),
-            "type": "time"
+            "filters": [
+                {
+                    "type": "time",
+                    "key": "task.deployDate",
+                    "from": int(self.args.get("start_date").timestamp() * 1000),
+                    "to": int(self.args.get("end_date").timestamp() * 1000)
+                },
+                {
+                    "type": "time",
+                    "key": "earningDate",
+                    "from": int(self.args.get("attribute_start_month").timestamp() * 1000),
+                    "to": int(self.args.get("attribute_end_month").timestamp() * 1000)
+                }
+            ],
+            "type": "and"
         }
         return request
 
     def prepare_request_page_and_order(self):
         orders = [
-            {"direction": "ASC", "fieldName": "deployDate"},
-            {"direction": "ASC", "fieldName": "storeName"},
-            {"direction": "ASC", "fieldName": "productName"}
+            {"direction": "ASC", "fieldName": "task.deployDate"},
+            {"direction": "ASC", "fieldName": "task.storeName"},
+            {"direction": "ASC", "fieldName": "task.productName"}
         ]
         if not self.args.get("limitRows") is None:
             return {
@@ -64,5 +70,5 @@ class ReportFetcher(ReportFetcherBase):
         }
 
     def prepare_report_url(self, site_basic_url):
-        report_url = "%s/%s" % (site_basic_url, "v1/report/exporter/response/report")
+        report_url = "%s/%s" % (site_basic_url, "v1/report/exporter/earnings/report")
         return report_url
