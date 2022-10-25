@@ -21,6 +21,7 @@ class ReportFetcher(ReportFetcherBase):
         request = self.prepare_request_page_and_order()
         request = self.prepare_request_dates(request)
         request = self.prepare_request_language(request)
+        request = self.prepare_request_columns(request)
 
         reqData = json.dumps(request, indent=None, sort_keys=False)
 
@@ -33,6 +34,11 @@ class ReportFetcher(ReportFetcherBase):
 
     def prepare_request_language(self, request):
         request["reasonLang"] = self.args.get("language", "en-US")
+        return request
+
+    def prepare_request_columns(self, request):
+        if self.args.get("columns"):
+            request["columns"] = self.args.get("columns")
         return request
 
     def prepare_request_dates(self, request):

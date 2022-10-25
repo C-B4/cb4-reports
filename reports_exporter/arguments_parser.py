@@ -1,5 +1,6 @@
 import argparse
 import datetime
+from argparse import RawTextHelpFormatter
 from calendar import monthrange
 
 from reports_exporter.report_type import ReportType
@@ -8,7 +9,10 @@ from reports_exporter.utils import die, isEmpty
 DEFAULT_WEEKS_COUNT = 4
 DEFAULT_LOG_THRESHOLD = "INFO"
 DEFAULT_FIRST_DAY_OF_WEEK = "MON"
-DEFAULT_DOMAIN="mcs.c-b4.com"
+DEFAULT_DOMAIN = "mcs.c-b4.com"
+FASHION_COLUMNS = ['DEPLOYMENT_DATE_UTC', 'DEPLOYMENT_WEEK_UTC', 'STORE_IDENTIFIER', 'PRODUCT_IDENTIFIER', 'MODEL_NAME', 'COLOR', 'SIZE', 'STORE', 'SALES_IN_SIMILAR_STORE', 'TARGET_SALE_FOR_STORE', 'USER_IDENTIFIER', 'HIT', 'RESPONSE_DATE', 'REMARK', 'REASON', 'REASON_GROUP', 'RECOMMENDATION_ID', 'STORE_MANAGER_EMAILS', 'PRODUCT_CATEGORY_NAME', 'STORE_CATEGORY_NAME']
+NON_FASHION_COLUMNS = ['DEPLOYMENT_DATE_UTC', 'DEPLOYMENT_WEEK_UTC', 'STORE_IDENTIFIER', 'PRODUCT_IDENTIFIER', 'PRODUCT_DESCRIPTION', 'STORE', 'SALES_IN_SIMILAR_STORE', 'TARGET_SALE_FOR_STORE', 'USER_IDENTIFIER', 'HIT', 'RESPONSE_DATE', 'REMARK', 'REASON', 'REASON_GROUP', 'RECOMMENDATION_ID', 'STORE_MANAGER_EMAILS', 'PRODUCT_CATEGORY_NAME', 'STORE_CATEGORY_NAME']
+DEFAULT_COLUMNS = []
 
 SHIFT_DAYS = {
     "SUN": 1,
@@ -126,6 +130,8 @@ def manage_response_report_start_and_end_dates(args):
 
 def process_args(args, report_type):
     args["domain"] = args.get("domain", DEFAULT_DOMAIN)
+    args["columns"] = args.get("columns", DEFAULT_COLUMNS)
+
     parse_site_url(args)
     args["log-threshold"] = args.get("log-threshold", DEFAULT_LOG_THRESHOLD)
 
@@ -146,7 +152,7 @@ class ArgumentParser:
             self.parser = self.earning_report_parser()
 
     def response_report_parser(self):
-        parser = argparse.ArgumentParser(description='Dumps the responses to a CSV file', formatter_class=argparse.RawTextHelpFormatter)
+        parser = argparse.ArgumentParser(description='Dumps the responses to a CSV file', formatter_class=RawTextHelpFormatter)
         self.common_arguments(parser)
         parser.add_argument('--start_date',
                             type=str,
@@ -163,6 +169,15 @@ class ArgumentParser:
                             dest='language',
                             default="en-US",
                             help='reasons language. Example: en-US'
+                            )
+        parser.add_argument('--columns',
+                            dest='columns',
+                            default=DEFAULT_COLUMNS,
+                            nargs='*',
+                            help=f"""list of columns names. default value is empty list (All columns without RECOMMENDATION_ID STORE_MANAGER_EMAILS).
+Fashion headers options: {' '.join(FASHION_COLUMNS)}
+Non fashion headers options: {' '.join(NON_FASHION_COLUMNS)}
+New non default options: RECOMMENDATION_ID STORE_MANAGER_EMAILS"""
                             )
         parser.add_argument('--weeks_count',
                             type=int,
