@@ -36,7 +36,8 @@ options = {
     "start_date": '2020-01-01',
     "end_date": '2021-01-11',
     # "log-threshold": "DEBUG"
-    "dir": "/tmp"
+    "dir": "/tmp",
+    "columns": ["DEPLOYMENT_DATE_UTC", "DEPLOYMENT_WEEK_UTC", "STORE_IDENTIFIER", "PRODUCT_IDENTIFIER", "PRODUCT_DESCRIPTION", "STORE", "SALES_IN_SIMILAR_STORE", "TARGET_SALE_FOR_STORE", "USER_IDENTIFIER", "HIT", "RESPONSE_DATE", "REMARK", "REASON", "REASON_GROUP", "RECOMMENDATION_ID", "STORE_MANAGER_EMAILS", "PRODUCT_CATEGORY_NAME", "STORE_CATEGORY_NAME"]
 }
 
 """
@@ -58,6 +59,8 @@ Available keys for the options dictionary:
     - mode
     - limitRows
     - accessToken
+    - columns - list of columns names. default value is empty list (All columns without RECOMMENDATION_ID STORE_MANAGER_EMAILS).
+    The all options: DEPLOYMENT_DATE_UTC, DEPLOYMENT_WEEK_UTC, STORE_IDENTIFIER, PRODUCT_IDENTIFIER, PRODUCT_DESCRIPTION, STORE, SALES_IN_SIMILAR_STORE, TARGET_SALE_FOR_STORE, USER_IDENTIFIER, HIT, RESPONSE_DATE, REMARK, REASON, REASON_GROUP, RECOMMENDATION_ID, STORE_MANAGER_EMAILS, PRODUCT_CATEGORY_NAME, STORE_CATEGORY_NAME
 """
 
 result_fetcher.run(options)
