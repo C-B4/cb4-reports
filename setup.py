@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='cb4_reports_exporter',
-      version='2.0.1',
+      version='2.19.0',
       description='Export reports from CB4',
       author='CB4',
       author_email="support@cb4.com",
